@@ -1,0 +1,186 @@
+<!DOCTYPE HTML>
+<!--
+	Solid State by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>Hemal Patel</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Page Wrapper -->
+			<div id="page-wrapper">
+
+				<!-- Header -->
+					<header id="header" class="alt">
+						<h1><a href="index.html">Hemal's Portfolio</a></h1>
+						<nav>
+							<a href="#menu">Menu</a>
+						</nav>
+					</header>
+
+				<!-- Menu -->
+					<nav id="menu">
+						<div class="inner">
+							<h2>Jump to</h2>
+							<ul class="links">
+								<li><a href="index.html">Top</a></li>
+								<li><a href="#four">Projects</a></li>
+								<li><a href="#footer">Info</a></li>
+
+							</ul>
+							<a href="#" class="close">Close</a>
+						</div>
+					</nav>
+
+				<!-- Banner -->
+					<section id="banner">
+						<div class="inner">
+							
+							<h2>My Portfolio</h2>
+							<p>By Hemal Patel</p>
+						</div>
+					</section>
+
+				<!-- Wrapper -->
+					<section id="wrapper">
+
+						<!-- One -->
+							<section id="one" class="wrapper spotlight style1">
+								<div class="inner">
+									<a href="#" class="image"><img src="images/pic09.jpg" alt="" /></a>
+									<div class="content">
+										<h2 class="major"> About Me</h2>
+										<p> Hello my name is Hemal. I started my journey at Kennesaw State and finished my undergrad in computer engineering at Georgia Tech. Most of my experience comes from working on solo and team projects in college, where we used different programming languages and hardware devices to complete our tasks. Each project was unique and required different skills, like debugging code or working in the lab with devices. These experiences have helped me learn a wide variety of technical skills, and I would like to share some of the projects I have been part of with you. </p>
+										
+									</div>
+								</div>
+							</section>
+
+
+
+						<!-- Three -->
+							<section id="three" class="wrapper spotlight style3">
+								<div class="inner">
+									<!--<a href="#" class="image"><img src="images/pic03.jpg" alt="" /></a>-->
+									<div class="content">
+										<h2 class="major">Resmume</h2>
+										<iframe src="images/Hemal_Patel_Resume.pdf" width="100%" height="600px"></iframe>
+										
+										<p>Updated resume please contact me at hsppatel12@gmail.com</p>
+									</div>
+								</div>
+							</section>
+
+						<!-- Four -->
+							<section id="four" class="wrapper alt style1">
+								<div class="inner">
+									<h2 class="major">Projects</h2>
+									<h3>Smart Pipe System (Senior Design I & II)</h3>
+									<img src="images/pic02.jpg"  width="600" height="400" alt="A centered image" style="display: block; margin-left: auto; margin-right: auto; ">
+									<p> This is my final project at Georgia Tech, where we developed a device that detects leaks, changes in pressure, and checks water quality via pH sensor in pipes. It was a team project involving electrical engineers and computer engineers, spanning two semesters. Our goal was to create an affordable device accessible to under-resourced countries. Many cities in rural areas lack the infrastructure to monitor pipe issues and water safety effectively. Instead of performing routine checks manually, our device network provides a notification system to alert users to potential problems.</p>
+									
+									<p>My part in this project was to help code the notification system and connect the device to AWS. We used AWS to host a website where users can view real-time data from each device, including a table of measurements. Additionally, I implemented a system to email users if there are any major discrepancies. </p>
+
+									<p>Our testing approach involved creating a simulation with two devices at different ends of a pipe, releasing water to observe pressure differences. Once the pressure was measured, the data was sent via LoRa to our receiver, which then uploaded it to a table in AWS. The system parsed the data over a range of times to detect any major discrepancies and notify the user. We applied the same process to monitor water quality. </p>
+                                   
+									<h3>Airplane Instrument Visualization</h3>
+									<div style="display: flex; justify-content: center;">
+										<div style="display: flex; gap: 10px;">
+											<img src="images/pic11.JPG" alt="Image 1" style="width: 200px; height: auto;">
+											<img src="images/pic03.jpg" alt="Image 2" style="width: 200px; height: auto;">
+										</div>
+									</div>
+									
+									<p>This was a team final project for a class called Embedded Systems. At the end of the year, we were tasked with using the knowledge we had gained throughout the year to create a device of our choice. Our idea was to replicate a smaller version of the head-up display used in fighter jets for passenger planes. We built a heads-up display projector unit that projects data directly onto the windshield, so the pilot doesn’t need to look down at their instruments. </p>	
+
+									<p> To achieve this, we used an MBED. We integrated IMU data (gyroscope, magnetometer), GPS data (coordinates, current time, number of satellites connected, velocity, altitude, direction), and a barometric pressure sensor (temperature, pressure). All of this was displayed on a uLCD with a HUD to be shown on the windshield.</p>
+									<p> I mainly worked on the barometric sensor and assisted with debugging the other sensors to ensure they produced the correct outputs. </p>
+									
+									<h3>Image Segmentation</h3>
+									<img src="images/pic01.jpg"  width="350" height="300" alt="A centered image" style="display: block; margin-left: auto; margin-right: auto; ">
+									<p>This was a team final project for a Machine Learning class. At the end of the semester, we were tasked with using the techniques we learned for a project. Our idea was to perform image segmentation on pictures of vehicles to identify their categories. We achieved this by using a convolutional neural network (CNN) on a dataset of vehicle images we found to pre-train it. After that, we applied transfer learning and filters to the pre-trained CNN to repurpose it for identifying generalized categories and highlighting them. </p>
+									<p> My involvement was to help with applying and researching different unsupervised learning methods and filters to see which one helped with the segmentation. </p>
+
+							
+									<h3> IC fabrication </h3>
+									<img src="images/pic04.jpg"  width="350" height="350" alt="A centered image" style="display: block; margin-left: auto; margin-right: auto; ">
+							
+									<p>In this class, we had the opportunity to learn the process of making an integrated circuit (IC). Over 14 weeks, we worked in the cleanroom, experiencing each step of the fabrication process firsthand. We learned how to calculate various wafer characterizations to ensure the reliability of our ICs. Before each masking process, we verified that our theoretical calculations matched the measured data. By the end of the year, each student successfully created their own IC.</p>
+
+									<h4 style="text-align: center;"> NOTE </h4>
+									<p> I want to thank all my teammates for making this a memorable experience. It was a pleasure to grow and learn together. If you need to validate my projects or view any code or reports, please contact me via email. To respect the privacy of my teammates' hard work, I have chosen to provide only basic information about each project. For more detailed insights, please reach out to me directly.</p>										
+										
+
+									
+
+								
+								</div>
+							</section>
+
+					</section>
+
+				<!-- Footer--> 
+					<section id="footer">
+						<div class="inner">
+							<h2 class="major">info</h2>
+							
+							
+
+
+
+								<head>
+									<meta charset="UTF-8">
+									<meta name="viewport" content="width=device-width, initial-scale=1.0">
+									<title>Center Icons Horizontally</title>
+									<style>
+										.icon-container {
+											display: flex;
+											justify-content: center; /* Centers horizontally */
+											gap: 20px; /* Optional: Adds space between icons */
+										}
+										.icon {
+											font-size: 24px; /* Adjust the size of the icons */
+										}
+									</style>
+								</head>
+								<body>
+									<div class="icon-container">
+										<a href="mailto:hsppatel12@gmail.com" class="icon">
+											<i class="fas fa-envelope"></i> hsppatel12@gmail.com
+										</a>
+										
+										<a href="https://www.linkedin.com/in/hemal-patel-0a3133255" class="icon" target="_blank">
+											<i class="fab fa-linkedin"></i>
+										</a>
+										<a href="https://meritpages.com/Hemal-Shirish-Patel/4313158" class="icon" target="_blank">
+											<i class="fas fa-trophy"></i>
+										</a>
+									</div>
+								</body>
+								
+							<ul class="copyright">
+								<li>&copy; 2024 Hemal Patel. All rights reserved. Design by <a href="https://html5up.net" target="_blank">HTML5 UP</a>.</li>
+								
+							</ul>
+						</div>
+					</section>
+					
+			</div>
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
