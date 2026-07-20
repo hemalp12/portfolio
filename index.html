@@ -1,187 +1,510 @@
-<!DOCTYPE HTML>
-<!--
-	Solid State by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
--->
-<html>
-	<head>
-		<title>Hemal Patel</title>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
-	</head>
-	<body class="is-preload">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+<title>Hemal Patel — ~/portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0a0d11;
+    --panel: #10151b;
+    --panel-border: #232b34;
+    --fg: #cbd5dd;
+    --dim: #5c6773;
+    --teal: #64d9c4;
+    --amber: #ffb454;
+    --pink: #ff7085;
+    --font: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  *{ box-sizing: border-box; }
+  html,body{
+    height:100%; margin:0; padding:0;
+    background: var(--bg);
+    font-family: var(--font);
+    color: var(--fg);
+  }
+  #crt-wrap{
+    position:relative;
+    height:100vh; height:100dvh;
+    display:flex; align-items:center; justify-content:center;
+    padding: 20px;
+  }
+  #crt-wrap::before{
+    content:"";
+    position:absolute; inset:0;
+    pointer-events:none;
+    background: radial-gradient(ellipse at center, rgba(0,0,0,0) 55%, rgba(0,0,0,0.55) 100%);
+    z-index: 5;
+  }
+  #terminal{
+    width: 100%;
+    max-width: 900px;
+    height: 100%;
+    max-height: 640px;
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 10px;
+    display:flex; flex-direction:column;
+    overflow:hidden;
+    box-shadow: 0 30px 80px -20px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.02);
+  }
+  .title-bar{
+    display:flex; align-items:center; gap:10px;
+    padding: 10px 14px;
+    background: #0d1218;
+    border-bottom: 1px solid var(--panel-border);
+    flex-shrink:0;
+  }
+  .dots{ display:flex; gap:7px; }
+  .dots span{
+    width:11px; height:11px; border-radius:50%;
+    display:inline-block;
+  }
+  .dots span:nth-child(1){ background: var(--pink); opacity:.85; }
+  .dots span:nth-child(2){ background: var(--amber); opacity:.85; }
+  .dots span:nth-child(3){ background: var(--teal); opacity:.85; }
+  .title-bar .title{
+    flex:1; text-align:center;
+    font-size: 12.5px; color: var(--dim);
+    letter-spacing: .04em;
+  }
+  #screen{
+    flex:1; overflow-y:auto;
+    padding: 18px 20px 12px;
+    font-size: 14px;
+    line-height: 1.6;
+    position:relative;
+  }
+  #screen::-webkit-scrollbar{ width:10px; }
+  #screen::-webkit-scrollbar-thumb{ background: var(--panel-border); border-radius: 6px; }
+  #screen::before{
+    content:"";
+    position:absolute; inset:0;
+    pointer-events:none;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.018) 0px,
+      rgba(255,255,255,0.018) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    z-index: 2;
+  }
+  #output{ white-space: pre-wrap; word-break: break-word; }
+  .line{ margin: 0 0 2px; }
+  .echo{ color: var(--dim); }
+  .echo .prompt-tag{ color: var(--teal); }
+  .err{ color: var(--pink); }
+  .dir{ color: var(--teal); }
+  .file{ color: var(--fg); }
+  .exe{ color: var(--amber); }
+  h3.out-title{
+    margin: 14px 0 4px; font-size: 14px;
+    color: var(--amber); font-weight: 700;
+    letter-spacing: .02em;
+  }
+  .out-block{ margin: 4px 0 16px; color: var(--fg); }
+  .out-block p{ margin: 0 0 10px; }
+  a{ color: var(--teal); text-decoration: none; border-bottom: 1px dotted var(--teal); }
+  a:hover{ color: var(--amber); border-color: var(--amber); }
+  img.shot{
+    display:block; max-width: 100%; height:auto;
+    border: 1px solid var(--panel-border);
+    border-radius: 4px;
+    margin: 8px 0 14px;
+  }
+  .img-row{ display:flex; gap:10px; flex-wrap:wrap; margin: 8px 0 14px; }
+  .img-row img.shot{ margin:0; max-width: 220px; }
+  iframe.resume{
+    width:100%; height: 340px;
+    border: 1px solid var(--panel-border);
+    border-radius: 4px;
+    margin: 8px 0 10px;
+    background:#fff;
+  }
+  .chips{ margin: 6px 0 4px; }
+  .chip{
+    display:inline-block;
+    border: 1px dotted var(--dim);
+    color: var(--fg);
+    padding: 2px 9px;
+    border-radius: 4px;
+    margin: 3px 6px 3px 0;
+    cursor:pointer;
+    font-size: 13px;
+  }
+  .chip:hover{ border-color: var(--teal); color: var(--teal); }
+  .prompt-line{
+    display:flex; align-items:center;
+    margin-top: 6px;
+  }
+  .prompt-line .prompt-tag{
+    color: var(--teal); white-space: nowrap; margin-right: 8px;
+    flex-shrink:0;
+  }
+  #cmd-input{
+    flex:1; background:transparent; border:none; outline:none;
+    color: var(--fg); font-family: var(--font); font-size: 14px;
+    caret-color: var(--amber);
+  }
+  .help-grid{ display:grid; grid-template-columns: max-content 1fr; column-gap: 16px; row-gap: 4px; }
+  .help-grid .cmd{ color: var(--amber); }
+  .contact-row{ display:flex; gap:16px; flex-wrap:wrap; margin-top:4px; }
+  @media (max-width: 640px){
+    #crt-wrap{ padding: 0; }
+    #terminal{ max-height: 100%; border-radius: 0; border:none; }
+    #screen{ font-size: 13px; padding: 14px 14px 10px; }
+    .img-row img.shot{ max-width: 45%; }
+  }
+</style>
+</head>
+<body>
 
-		<!-- Page Wrapper -->
-			<div id="page-wrapper">
+<div id="crt-wrap">
+  <div id="terminal">
+    <div class="title-bar">
+      <div class="dots"><span></span><span></span><span></span></div>
+      <div class="title">hemal@portfolio — ~ — 80x24</div>
+    </div>
+    <div id="screen">
+      <div id="output"></div>
+      <div class="prompt-line">
+        <span class="prompt-tag">hemal@portfolio:~$</span>
+        <input id="cmd-input" autocomplete="off" autocapitalize="off" spellcheck="false" />
+      </div>
+    </div>
+  </div>
+</div>
 
-				<!-- Header -->
-					<header id="header" class="alt">
-						<h1><a href="index.html">Hemal's Portfolio</a></h1>
-						<nav>
-							<a href="#menu">Menu</a>
-						</nav>
-					</header>
+<script>
+(function(){
+  const output = document.getElementById('output');
+  const screen = document.getElementById('screen');
+  const input = document.getElementById('cmd-input');
 
-				<!-- Menu -->
-					<nav id="menu">
-						<div class="inner">
-							<h2>Jump to</h2>
-							<ul class="links">
-								<li><a href="index.html">Top</a></li>
-								<li><a href="#four">Projects</a></li>
-								<li><a href="#footer">Info</a></li>
+  function scrollDown(){ screen.scrollTop = screen.scrollHeight; }
 
-							</ul>
-							<a href="#" class="close">Close</a>
-						</div>
-					</nav>
+  function printRaw(html, cls){
+    const div = document.createElement('div');
+    div.className = 'line' + (cls ? ' ' + cls : '');
+    div.innerHTML = html;
+    output.appendChild(div);
+    scrollDown();
+  }
 
-				<!-- Banner -->
-					<section id="banner">
-						<div class="inner">
-							
-							<h2>My Portfolio</h2>
-							<p>By Hemal Patel</p>
-						</div>
-					</section>
+  function printBlock(html){
+    const div = document.createElement('div');
+    div.className = 'out-block';
+    div.innerHTML = html;
+    output.appendChild(div);
+    scrollDown();
+  }
 
-				<!-- Wrapper -->
-					<section id="wrapper">
+  function echoCommand(cmd){
+    printRaw('<span class="prompt-tag">hemal@portfolio:~$</span> ' + escapeHtml(cmd), 'echo');
+  }
 
-						<!-- One -->
-							<section id="one" class="wrapper spotlight style1">
-								<div class="inner">
-									<a href="#" class="image"><img src="images/pic09.JPG" alt="" /></a>
-									<div class="content">
-										<h2 class="major"> About Me</h2>
-										<p> Hello my name is Hemal. I started my journey at Kennesaw State and finished my undergrad in computer engineering at Georgia Tech. Most of my experience comes from working on solo and team projects in college, where we used different programming languages and hardware devices to complete our tasks. Each project was unique and required different skills, like debugging code or working in the lab with devices. These experiences have helped me learn a wide variety of technical skills, and I would like to share some of the projects I have been part of with you. </p>
-										
-									</div>
-								</div>
-							</section>
+  function escapeHtml(s){
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
 
+  // ---------- content ----------
 
+  const ABOUT = `
+    <h3 class="out-title">about.txt</h3>
+    <div class="out-block">
+      <img class="shot" src="images/pic09.JPG" alt="Hemal Patel" style="max-width:260px;">
+      <p>Hey, I'm Hemal. I started at Kennesaw State and finished my undergrad in Computer Engineering
+      at Georgia Tech. Most of what I know comes from solo and team projects in school &mdash; different
+      languages, different hardware, different failure modes.</p>
+      <p>Each project below needed a different set of skills: debugging firmware at 2am, wiring up sensors
+      in a lab, training a model, or standing in a cleanroom. That mix is basically my resume in project form.
+      Type <span class="cmd" style="color:var(--amber)">projects</span> to see them.</p>
+    </div>
+  `;
 
-						<!-- Three -->
-							<section id="three" class="wrapper spotlight style3">
-								<div class="inner">
-									<!--<a href="#" class="image"><img src="images/pic03.jpg" alt="" /></a>-->
-									<div class="content">
-										<h2 class="major">Resmume</h2>
-										<iframe src="images/Hemal_Patel_Resume.pdf" width="100%" height="600px"></iframe>
-										
-										<p>Updated resume please contact me at hsppatel12@gmail.com</p>
-									</div>
-								</div>
-							</section>
+  const CONTACT = `
+    <h3 class="out-title">contact.txt</h3>
+    <div class="out-block">
+      <div class="contact-row">
+        <a href="mailto:hsppatel12@gmail.com">hsppatel12@gmail.com</a>
+        <a href="https://www.linkedin.com/in/hemal-patel-0a3133255" target="_blank" rel="noopener">linkedin.com/in/hemal-patel</a>
+        <a href="https://meritpages.com/Hemal-Shirish-Patel/4313158" target="_blank" rel="noopener">meritpages &#8594; achievements</a>
+      </div>
+    </div>
+  `;
 
-						<!-- Four -->
-							<section id="four" class="wrapper alt style1">
-								<div class="inner">
-									<h2 class="major">Projects</h2>
-									<h3>Smart Pipe System (Senior Design I & II)</h3>
-									<img src="images/pic02.jpg"  width="600" height="400" alt="A centered image" style="display: block; margin-left: auto; margin-right: auto; ">
-									<p> This is my final project at Georgia Tech, where we developed a device to detect leaks, monitor pressure changes, and check water quality using a pH sensor in pipes. It was a team effort involving both electrical and computer engineers over two semesters. Our goal was to create an affordable solution for under-resourced countries, as many rural areas lack the infrastructure to monitor pipe issues and ensure water safety effectively. Instead of relying on manual routine checks, our device provides a networked notification system to alert users to potential problems.</p>
-									
-									<p>My role in this project was to help code the notification system and connect the device to AWS. We used AWS to host a website where users could view real-time data from each device, including a table of measurements. Additionally, I implemented a system that emails users if any major discrepancies are detected. </p>
+  const RESUME = `
+    <h3 class="out-title">resume.pdf</h3>
+    <div class="out-block">
+      <iframe class="resume" src="images/Hemal_Patel_Resume.pdf"></iframe>
+      <p><a href="images/Hemal_Patel_Resume.pdf" target="_blank" rel="noopener">open resume.pdf in a new tab &#8594;</a><br>
+      Updated resume &mdash; questions to <a href="mailto:hsppatel12@gmail.com">hsppatel12@gmail.com</a></p>
+    </div>
+  `;
 
-									<p>Our testing approach involved simulating two devices at opposite ends of a pipe and releasing water to observe pressure differences. After measuring the pressure, the data was transmitted via LoRa to our receiver, which then uploaded it to a table in AWS. The system analyzed the data over time to detect any significant discrepancies and notify the user. We used the same process to monitor water quality. </p>
-                                   
-									<h3>Airplane Instrument Visualization</h3>
-									<div style="display: flex; justify-content: center;">
-										<div style="display: flex; gap: 10px;">
-											<img src="images/pic11.JPG" alt="Image 1" style="width: 200px; height: auto;">
-											<img src="images/pic03.jpg" alt="Image 2" style="width: 200px; height: auto;">
-										</div>
-									</div>
-									
-									<p>This was a team final project for our Embedded Systems class. At the end of the year, we were tasked with applying the knowledge we had gained to create a device of our choice. Our idea was to replicate a smaller version of the head-up display used in fighter jets, but for passenger planes. We built a projector unit that displays data directly onto the windshield, allowing the pilot to see key information without looking down at the instruments. </p>	
+  const PROJECTS = {
+    'smart-pipe.md': `
+      <h3 class="out-title">projects/smart-pipe.md &mdash; Smart Pipe System (Senior Design I &amp; II)</h3>
+      <div class="out-block">
+        <img class="shot" src="images/pic02.jpg" alt="Smart Pipe System" style="max-width:420px;">
+        <p>My final project at Georgia Tech: a device to detect leaks, monitor pressure changes, and check
+        water quality with a pH sensor, built with both electrical and computer engineers over two semesters.
+        The goal was an affordable monitoring solution for under-resourced areas where routine manual checks
+        aren't realistic &mdash; our device gives a networked alert instead.</p>
+        <p>My part was coding the notification system and connecting the device to AWS. We hosted a site on
+        AWS showing real-time readings from each device in a live table, plus an email alert if a reading
+        crossed a threshold.</p>
+        <p>For testing, we simulated two devices at opposite ends of a pipe and ran water through it to watch
+        the pressure differential. Readings went over LoRa to a receiver, up to the AWS table, and the system
+        flagged anything abnormal over time &mdash; same approach for the water-quality data.</p>
+      </div>
+    `,
+    'hud-display.md': `
+      <h3 class="out-title">projects/hud-display.md &mdash; Airplane Instrument Visualization</h3>
+      <div class="out-block">
+        <div class="img-row">
+          <img class="shot" src="images/pic11.JPG" alt="HUD prototype 1">
+          <img class="shot" src="images/pic03.jpg" alt="HUD prototype 2">
+        </div>
+        <p>Final team project for Embedded Systems: a scaled-down version of a fighter-jet head-up display,
+        built for passenger planes instead. A projector unit throws flight data straight onto the windshield
+        so a pilot never has to look down at the instrument panel.</p>
+        <p>We ran it on an MBED microcontroller, pulling in an IMU (gyroscope, magnetometer), GPS (coordinates,
+        time, satellite count, velocity, altitude, heading), and a barometric pressure sensor (temperature,
+        pressure) &mdash; all rendered on a uLCD and projected as the HUD.</p>
+        <p>I mainly owned the barometric sensor and helped debug the rest of the sensor stack to make sure
+        every reading was accurate.</p>
+      </div>
+    `,
+    'segmentation.md': `
+      <h3 class="out-title">projects/segmentation.md &mdash; Image Segmentation</h3>
+      <div class="out-block">
+        <img class="shot" src="images/pic01.jpg" alt="Image segmentation" style="max-width:380px;">
+        <p>Final team project for Machine Learning: image segmentation on vehicle photos to classify them by
+        category, using a CNN pre-trained on a vehicle dataset. We applied transfer learning plus filtering
+        on top of that to adapt it for general categorization and highlighting.</p>
+        <p>My part was researching and testing different unsupervised learning methods and filters to find
+        what actually worked best for the segmentation task.</p>
+      </div>
+    `,
+    'ic-fab.md': `
+      <h3 class="out-title">projects/ic-fab.md &mdash; IC Fabrication</h3>
+      <div class="out-block">
+        <img class="shot" src="images/pic04.jpg" alt="IC fabrication" style="max-width:340px;">
+        <p>A 14-week course spent almost entirely in a cleanroom, fabricating an actual integrated circuit
+        from scratch. We learned to calculate wafer characterizations to check IC reliability, and verified
+        our theoretical math against measured data before every masking step. Everyone in the class walked
+        out with their own working IC.</p>
+      </div>
+    `,
+    'README.md': `
+      <h3 class="out-title">projects/README.md</h3>
+      <div class="out-block">
+        <p>Thanks to every teammate who made these projects worth doing. To respect the work my teammates put
+        in, I've kept these write-ups high-level. If you want to see actual code, reports, or dig into any
+        project further, email me &mdash; <a href="mailto:hsppatel12@gmail.com">hsppatel12@gmail.com</a>.</p>
+      </div>
+    `
+  };
 
-									<p>To achieve this, we used an MBED microcontroller. We integrated data from an IMU (gyroscope, magnetometer), GPS (coordinates, current time, number of satellites connected, velocity, altitude, direction), and a barometric pressure sensor (temperature, pressure). All this information was displayed on a uLCD with a HUD projected onto the windshield.</p>
-									
-									<p>I primarily worked on the barometric sensor and assisted with debugging the other sensors to ensure they provided accurate outputs. </p>
-									
-									<h3>Image Segmentation</h3>
-									<img src="images/pic01.jpg"  width="350" height="300" alt="A centered image" style="display: block; margin-left: auto; margin-right: auto; ">
-									<p>This was a team final project for a Machine Learning class. At the end of the semester, we were tasked with using the techniques we had learned for a project. Our idea was to perform image segmentation on pictures of vehicles to identify their categories. We accomplished this using a convolutional neural network (CNN), which we pre-trained on a dataset of vehicle images. After that, we applied transfer learning and filters to adapt the CNN for identifying general categories and highlighting them. </p>
-									<p> My role involved researching and applying various unsupervised learning methods and filters to determine which worked best for the segmentation task. </p>
+  const FS = {
+    '': [
+      { name: 'about.txt', type: 'file' },
+      { name: 'projects/', type: 'dir' },
+      { name: 'resume.pdf', type: 'exe' },
+      { name: 'contact.txt', type: 'file' },
+    ],
+    'projects': [
+      { name: 'smart-pipe.md', type: 'file' },
+      { name: 'hud-display.md', type: 'file' },
+      { name: 'segmentation.md', type: 'file' },
+      { name: 'ic-fab.md', type: 'file' },
+      { name: 'README.md', type: 'file' },
+    ]
+  };
 
-							
-									<h3> IC fabrication </h3>
-									<img src="images/pic04.jpg"  width="350" height="350" alt="A centered image" style="display: block; margin-left: auto; margin-right: auto; ">
-							
-									<p>In this class, we had the opportunity to learn the process of fabricating an integrated circuit (IC). Over the course of 14 weeks, we worked in a cleanroom, experiencing each step of the fabrication process firsthand. We learned how to calculate various wafer characterizations to ensure the reliability of our ICs. Before each masking process, we verified that our theoretical calculations aligned with the measured data. By the end of the course, each student successfully created their own IC.</p>
+  function renderLs(dir){
+    dir = (dir || '').replace(/^\/+|\/+$/g,'');
+    const entries = FS[dir];
+    if (!entries){
+      printRaw('ls: cannot access \'' + escapeHtml(dir) + '\': No such directory', 'err');
+      return;
+    }
+    const row = entries.map(e => {
+      const cls = e.type === 'dir' ? 'dir' : (e.type === 'exe' ? 'exe' : 'file');
+      return '<span class="' + cls + '">' + e.name + '</span>';
+    }).join('   ');
+    printRaw(row);
+  }
 
-									<h4 style="text-align: center;"> NOTE </h4>
-									<p> I want to thank all my teammates for making this a memorable experience. It was a pleasure to grow and learn together. If you need to validate my projects or view any code or reports, please contact me via email. To respect the privacy of my teammates' hard work, I have chosen to provide only basic information about each project. For more detailed insights, please reach out to me directly.</p>										
-										
+  function renderHelp(){
+    printBlock(`
+      <div class="help-grid">
+        <span class="cmd">help</span><span>show this list</span>
+        <span class="cmd">about</span><span>who I am</span>
+        <span class="cmd">ls [dir]</span><span>list files, e.g. <em>ls projects</em></span>
+        <span class="cmd">cat &lt;file&gt;</span><span>read a file, e.g. <em>cat projects/smart-pipe.md</em></span>
+        <span class="cmd">projects</span><span>quick list of all project files</span>
+        <span class="cmd">resume</span><span>view / open resume.pdf</span>
+        <span class="cmd">contact</span><span>email, LinkedIn, achievements</span>
+        <span class="cmd">clear</span><span>clear the screen</span>
+        <span class="cmd">banner</span><span>reprint the header</span>
+      </div>
+    `);
+  }
 
-									
+  function renderBanner(){
+    printRaw(
+`<span style="color:var(--teal)">┌──────────────────────────────────────────┐
+│   H E M A L&nbsp;&nbsp;&nbsp;P A T E L                    │
+│   computer engineer &mdash; ga tech            │
+└──────────────────────────────────────────┘</span>`
+    );
+  }
 
-								
-								</div>
-							</section>
+  function catFile(path){
+    path = path.trim().replace(/^\.\//,'');
+    if (path === 'about.txt'){ printBlock(ABOUT); return; }
+    if (path === 'contact.txt'){ printBlock(CONTACT); return; }
+    if (path === 'resume.pdf'){ printBlock(RESUME); return; }
+    const m = path.match(/^projects\/(.+)$/);
+    if (m && PROJECTS[m[1]]){ printBlock(PROJECTS[m[1]]); return; }
+    if (PROJECTS[path]){ printBlock(PROJECTS[path]); return; } // allow without "projects/" prefix
+    printRaw('cat: ' + escapeHtml(path) + ': No such file or directory', 'err');
+  }
 
-					</section>
+  function renderProjectsList(){
+    printRaw('Project files &mdash; use <span style="color:var(--amber)">cat projects/&lt;name&gt;</span> to read one:');
+    renderLs('projects');
+  }
 
-				<!-- Footer--> 
-					<section id="footer">
-						<div class="inner">
-							<h2 class="major">info</h2>
-							
-							
+  // ---------- command dispatch ----------
 
+  const commands = {
+    help: () => renderHelp(),
+    about: () => printBlock(ABOUT),
+    whoami: () => printBlock(ABOUT),
+    contact: () => printBlock(CONTACT),
+    resume: () => printBlock(RESUME),
+    projects: () => renderProjectsList(),
+    banner: () => renderBanner(),
+    clear: () => { output.innerHTML = ''; },
+    ls: (arg) => renderLs(arg),
+    cat: (arg) => {
+      if (!arg){ printRaw('usage: cat <file>', 'err'); return; }
+      catFile(arg);
+    },
+    date: () => printRaw(new Date().toString()),
+    echo: (arg) => printRaw(escapeHtml(arg || '')),
+    pwd: () => printRaw('/home/hemal'),
+  };
 
+  function runCommand(raw){
+    const trimmed = raw.trim();
+    if (!trimmed) return;
+    echoCommand(raw);
 
-								<head>
-									<meta charset="UTF-8">
-									<meta name="viewport" content="width=device-width, initial-scale=1.0">
-									<title>Center Icons Horizontally</title>
-									<style>
-										.icon-container {
-											display: flex;
-											justify-content: center; /* Centers horizontally */
-											gap: 20px; /* Optional: Adds space between icons */
-										}
-										.icon {
-											font-size: 24px; /* Adjust the size of the icons */
-										}
-									</style>
-								</head>
-								<body>
-									<div class="icon-container">
-										<a href="mailto:hsppatel12@gmail.com" class="icon">
-											<i class="fas fa-envelope"></i> hsppatel12@gmail.com
-										</a>
-										
-										<a href="https://www.linkedin.com/in/hemal-patel-0a3133255" class="icon" target="_blank">
-											<i class="fab fa-linkedin"></i>
-										</a>
-										<a href="https://meritpages.com/Hemal-Shirish-Patel/4313158" class="icon" target="_blank">
-											<i class="fas fa-trophy"></i>
-										</a>
-									</div>
-								</body>
-								
-							<ul class="copyright">
-								<li>&copy; 2024 Hemal Patel. All rights reserved. Design by <a href="https://html5up.net" target="_blank">HTML5 UP</a>.</li>
-								
-							</ul>
-						</div>
-					</section>
-					
-			</div>
+    if (trimmed === 'sudo make-coffee'){
+      printRaw('sudo: make-coffee: permission denied &mdash; some things even root can\'t do.', 'err');
+      return;
+    }
 
-		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.scrollex.min.js"></script>
-			<script src="assets/js/browser.min.js"></script>
-			<script src="assets/js/breakpoints.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<script src="assets/js/main.js"></script>
+    const parts = trimmed.split(/\s+/);
+    const name = parts[0].toLowerCase();
+    const arg = parts.slice(1).join(' ');
 
-	</body>
+    if (commands[name]){
+      commands[name](arg);
+    } else {
+      printRaw('command not found: ' + escapeHtml(name) + ' &mdash; type <span style="color:var(--amber)">help</span> to see what\'s available.', 'err');
+    }
+  }
+
+  // ---------- input handling ----------
+
+  const history = [];
+  let historyIndex = -1;
+  const allCommandNames = Object.keys(commands);
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter'){
+      const val = input.value;
+      history.push(val);
+      historyIndex = history.length;
+      runCommand(val);
+      input.value = '';
+    } else if (e.key === 'ArrowUp'){
+      if (historyIndex > 0){ historyIndex--; input.value = history[historyIndex] || ''; }
+      e.preventDefault();
+    } else if (e.key === 'ArrowDown'){
+      if (historyIndex < history.length){
+        historyIndex++;
+        input.value = history[historyIndex] || '';
+      }
+      e.preventDefault();
+    } else if (e.key === 'Tab'){
+      e.preventDefault();
+      const cur = input.value.toLowerCase();
+      const match = allCommandNames.find(c => c.startsWith(cur));
+      if (match) input.value = match;
+    } else if (e.key === 'l' && e.ctrlKey){
+      e.preventDefault();
+      output.innerHTML = '';
+    }
+  });
+
+  screen.addEventListener('click', () => input.focus());
+  window.addEventListener('load', () => input.focus());
+
+  // expose a helper for the quick chips
+  window.__runChip = function(cmd){
+    input.value = cmd;
+    runCommand(cmd);
+    input.value = '';
+    input.focus();
+  };
+
+  // ---------- boot sequence ----------
+
+  const bootLines = [
+    'booting hemal-OS v2.4.1 ...',
+    'mounting /home/hemal ...',
+    'loading modules: aws-sdk, embedded-c, tensorflow, kicad ...',
+    'starting shell ...',
+  ];
+
+  function typeBootLines(i){
+    if (i >= bootLines.length){
+      finishBoot();
+      return;
+    }
+    printRaw('<span style="color:var(--dim)">' + escapeHtml(bootLines[i]) + '</span>');
+    setTimeout(() => typeBootLines(i+1), 260);
+  }
+
+  function finishBoot(){
+    setTimeout(() => {
+      renderBanner();
+      printBlock(`
+        <p>Welcome &mdash; type <span style="color:var(--amber)">help</span> to see what this thing can do,
+        or click a shortcut below.</p>
+        <div class="chips">
+          <span class="chip" onclick="__runChip('about')">about</span>
+          <span class="chip" onclick="__runChip('projects')">projects</span>
+          <span class="chip" onclick="__runChip('resume')">resume</span>
+          <span class="chip" onclick="__runChip('contact')">contact</span>
+        </div>
+      `);
+      input.focus();
+    }, 200);
+  }
+
+  typeBootLines(0);
+})();
+</script>
+</body>
 </html>
