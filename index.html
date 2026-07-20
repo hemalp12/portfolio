@@ -172,7 +172,7 @@
     <div id="screen">
       <div id="output"></div>
       <div class="prompt-line">
-        <span class="prompt-tag">hemal@portfolio:~$</span>
+        <span class="prompt-tag" id="prompt-tag">hemal@portfolio:~$</span>
         <input id="cmd-input" autocomplete="off" autocapitalize="off" spellcheck="false" />
       </div>
     </div>
@@ -203,8 +203,18 @@
     scrollDown();
   }
 
+  let currentDir = ''; // '' = root, 'projects' = inside the projects folder
+
+  function promptText(){
+    return 'hemal@portfolio:~' + (currentDir ? '/' + currentDir : '') + '$';
+  }
+
+  function updatePrompt(){
+    document.getElementById('prompt-tag').textContent = promptText();
+  }
+
   function echoCommand(cmd){
-    printRaw('<span class="prompt-tag">hemal@portfolio:~$</span> ' + escapeHtml(cmd), 'echo');
+    printRaw('<span class="prompt-tag">' + promptText() + '</span> ' + escapeHtml(cmd), 'echo');
   }
 
   function escapeHtml(s){
@@ -347,6 +357,7 @@
         <span class="cmd">help</span><span>show this list</span>
         <span class="cmd">about</span><span>who I am</span>
         <span class="cmd">ls [dir]</span><span>list files, e.g. <em>ls projects</em></span>
+        <span class="cmd">cd &lt;dir&gt;</span><span>move into a folder, e.g. <em>cd projects</em> (or <em>cd ..</em> to go back)</span>
         <span class="cmd">cat &lt;file&gt;</span><span>read a file, e.g. <em>cat projects/smart-pipe.md</em></span>
         <span class="cmd">projects</span><span>quick list of all project files</span>
         <span class="cmd">resume</span><span>view / open resume.pdf</span>
@@ -358,12 +369,17 @@
   }
 
   function renderBanner(){
-    printRaw(
-`<span style="color:var(--teal)">┌──────────────────────────────────────────┐
-│   H E M A L&nbsp;&nbsp;&nbsp;P A T E L                    │
-│   computer engineer &mdash; ga tech            │
-└──────────────────────────────────────────┘</span>`
-    );
+    const lines = ['H E M A L   P A T E L', 'computer engineer - ga tech'];
+    const width = Math.max(...lines.map(l => l.length)) + 4; // 2 spaces padding each side
+    const top = '+' + '-'.repeat(width) + '+';
+    const bottom = '+' + '-'.repeat(width) + '+';
+    const middle = lines.map(l => {
+      const padTotal = width - l.length;
+      const left = Math.floor(padTotal / 2);
+      const right = padTotal - left;
+      return '|' + ' '.repeat(left) + escapeHtml(l) + ' '.repeat(right) + '|';
+    }).join('\n');
+    printRaw('<span style="color:var(--teal)">' + top + '\n' + middle + '\n' + bottom + '</span>');
   }
 
   function catFile(path){
@@ -393,7 +409,19 @@
     projects: () => renderProjectsList(),
     banner: () => renderBanner(),
     clear: () => { output.innerHTML = ''; },
-    ls: (arg) => renderLs(arg),
+    ls: (arg) => renderLs(arg || currentDir),
+    cd: (arg) => {
+      arg = (arg || '').trim().replace(/\/$/, '');
+      if (!arg || arg === '~' || arg === '..' || arg === '../'){
+        currentDir = '';
+      } else if (FS[arg]){
+        currentDir = arg;
+      } else {
+        printRaw('cd: ' + escapeHtml(arg) + ': No such directory', 'err');
+        return;
+      }
+      updatePrompt();
+    },
     cat: (arg) => {
       if (!arg){ printRaw('usage: cat <file>', 'err'); return; }
       catFile(arg);
@@ -430,17 +458,60 @@
   let historyIndex = -1;
   const allCommandNames = Object.keys(commands);
 
+  // every file/folder path that "cat" or "ls" would accept, used for argument tab-completion
+  const argCompletions = [
+    'about.txt', 'projects/', 'resume.pdf', 'contact.txt',
+    'projects/smart-pipe.md', 'projects/hud-display.md',
+    'projects/segmentation.md', 'projects/ic-fab.md', 'projects/README.md',
+  ];
+
+  // holds the current set of Tab matches so repeated Tab presses cycle through them;
+  // any other keystroke clears it so a fresh Tab press starts a new search
+  let tabState = null;
+  input.addEventListener('input', () => { tabState = null; });
+
+  function handleTab(){
+    const val = input.value;
+    const spaceIdx = val.indexOf(' ');
+
+    if (!tabState){
+      let candidates, cmdPart;
+      if (spaceIdx === -1){
+        // still typing the command word itself
+        const prefix = val.toLowerCase();
+        candidates = allCommandNames.filter(c => c.startsWith(prefix));
+        cmdPart = null;
+      } else {
+        // typing the argument (file/folder path) after the command word
+        cmdPart = val.slice(0, spaceIdx);
+        const prefix = val.slice(spaceIdx + 1).toLowerCase();
+        candidates = argCompletions.filter(c => c.toLowerCase().startsWith(prefix));
+      }
+      if (!candidates.length) return;
+      tabState = { cmdPart, candidates, index: 0 };
+    } else {
+      // Tab pressed again with no other typing in between -> cycle to the next match
+      tabState.index = (tabState.index + 1) % tabState.candidates.length;
+    }
+
+    const chosen = tabState.candidates[tabState.index];
+    input.value = tabState.cmdPart === null ? chosen : tabState.cmdPart + ' ' + chosen;
+  }
+
   input.addEventListener('keydown', (e) => {
     if (e.key === 'Enter'){
+      tabState = null;
       const val = input.value;
       history.push(val);
       historyIndex = history.length;
       runCommand(val);
       input.value = '';
     } else if (e.key === 'ArrowUp'){
+      tabState = null;
       if (historyIndex > 0){ historyIndex--; input.value = history[historyIndex] || ''; }
       e.preventDefault();
     } else if (e.key === 'ArrowDown'){
+      tabState = null;
       if (historyIndex < history.length){
         historyIndex++;
         input.value = history[historyIndex] || '';
@@ -448,17 +519,20 @@
       e.preventDefault();
     } else if (e.key === 'Tab'){
       e.preventDefault();
-      const cur = input.value.toLowerCase();
-      const match = allCommandNames.find(c => c.startsWith(cur));
-      if (match) input.value = match;
+      handleTab();
     } else if (e.key === 'l' && e.ctrlKey){
+      tabState = null;
       e.preventDefault();
       output.innerHTML = '';
     }
   });
 
-  screen.addEventListener('click', () => input.focus());
+  document.getElementById('terminal').addEventListener('click', () => input.focus());
   window.addEventListener('load', () => input.focus());
+  input.addEventListener('focus', () => {
+    // on mobile, the keyboard sliding up can push the prompt out of view - nudge it back
+    setTimeout(scrollDown, 300);
+  });
 
   // expose a helper for the quick chips
   window.__runChip = function(cmd){
@@ -486,24 +560,32 @@
     setTimeout(() => typeBootLines(i+1), 260);
   }
 
-  function finishBoot(){
-    setTimeout(() => {
-      renderBanner();
-      printBlock(`
-        <p>Welcome &mdash; type <span style="color:var(--amber)">help</span> to see what this thing can do,
-        or click a shortcut below.</p>
-        <div class="chips">
-          <span class="chip" onclick="__runChip('about')">about</span>
-          <span class="chip" onclick="__runChip('projects')">projects</span>
-          <span class="chip" onclick="__runChip('resume')">resume</span>
-          <span class="chip" onclick="__runChip('contact')">contact</span>
-        </div>
-      `);
-      input.focus();
-    }, 200);
+  function showWelcome(){
+    renderBanner();
+    printBlock(`
+      <p>Welcome &mdash; type <span style="color:var(--amber)">help</span> to see what this thing can do,
+      or click a shortcut below.</p>
+      <div class="chips">
+        <span class="chip" onclick="__runChip('about')">about</span>
+        <span class="chip" onclick="__runChip('projects')">projects</span>
+        <span class="chip" onclick="__runChip('resume')">resume</span>
+        <span class="chip" onclick="__runChip('contact')">contact</span>
+      </div>
+    `);
+    input.focus();
   }
 
-  typeBootLines(0);
+  function finishBoot(){
+    setTimeout(showWelcome, 200);
+  }
+
+  // skip the animated boot sequence for anyone with "reduce motion" set in their OS -
+  // they land straight on the prompt instead of watching lines type themselves out
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    showWelcome();
+  } else {
+    typeBootLines(0);
+  }
 })();
 </script>
 </body>
